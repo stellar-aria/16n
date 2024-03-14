@@ -1,0 +1,10 @@
+---
+BasedOnStyle: Chromium
+RequiresClausePosition: OwnLine
+IndentRequiresClause: false
+RequiresExpressionIndentation: OuterScope
+BreakBeforeBraces: Custom
+BraceWrapping:
+  BeforeElse: True
+ColumnLimit: 120
+AllowShortFunctionsOnASingleLine: None

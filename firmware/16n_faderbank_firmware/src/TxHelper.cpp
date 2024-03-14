@@ -4,8 +4,9 @@
  * MIT License
  */
 
-#include "TxHelper.h"
-#include "Arduino.h"
+#include "TxHelper.hpp"
+#include <Arduino.h>
+#include <array>
 
 // i2c
 #include <i2c_t3.h>
@@ -18,46 +19,36 @@ bool TxHelper::W0 = true;
 /**
  * Set the number of ports the device has (TXi is 8; FADER is 16)
  */
-void TxHelper::SetPorts(int ports)
-{
+void TxHelper::SetPorts(int ports) {
   TxHelper::Ports = ports;
 }
 
 /**
  * Determine how the modes shift (TXi shifts 3; FADER shifts 4)
  */
-void TxHelper::SetModes(int modes)
-{
+void TxHelper::SetModes(int modes) {
   TxHelper::Modes = modes;
 }
 
 /**
  * Determine if the Wire or Wire1 interface should be used
  */
-void TxHelper::UseWire1(bool use)
-{
+void TxHelper::UseWire1(bool use) {
   TxHelper::W0 = !use;
 }
 
 /**
  * Parse the response coming down the wire
  */
-TxResponse TxHelper::Parse(size_t len)
-{
-
+TxResponse TxHelper::Parse(size_t len) {
   TxResponse response;
 
-  int buffer[4] = {0, 0, 0, 0};
-
-  // zero out the read buffer
+  std::array<int, 4> buffer = {0};
   int counterPal = 0;
-  memset(buffer, 0, sizeof(buffer));
 
   // read the data
-  while (1 < (W0 ? Wire.available() : Wire1.available()))
-  {
-    if (counterPal < 4)
-    {
+  while (1 < (W0 ? Wire.available() : Wire1.available())) {
+    if (counterPal < 4) {
       buffer[counterPal++] = (W0 ? Wire.read() : Wire1.read());
     }
   }
@@ -71,7 +62,7 @@ TxResponse TxHelper::Parse(size_t len)
 
   response.Command = buffer[0];
   response.Output = buffer[1];
-  response.Value = (int)temp2;
+  response.Value = static_cast<int>(temp2);
 
   // Serial.printf("temp: %d; temp2: %d; helper: %d\n", temp, temp2, response.Value);
 
@@ -81,9 +72,7 @@ TxResponse TxHelper::Parse(size_t len)
 /**
  * Decode the IO from the value coming down the wire
  */
-TxIO TxHelper::DecodeIO(int io)
-{
-
+TxIO TxHelper::DecodeIO(int io) {
   TxIO decoded;
 
   // turn it into 0-7 for the individual device's port (TXi)

@@ -38,12 +38,6 @@ In `config.h`
 
 will log debug messages to the serial port.
 
-```C
-#define DEV 1
-```
-
-will restrict the faderbank to its first channel. Designed for breadboard development; almost certainly not of interest.
-
 ## Memory Map
 
 Configuration is stored in the first 80 bytes of the on-board EEPROM. It looks like this:
